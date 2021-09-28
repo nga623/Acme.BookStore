@@ -52,7 +52,8 @@ namespace Acme.BookStore.Web
         typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
         typeof(AbpTenantManagementWebModule),
         typeof(AbpAspNetCoreSerilogModule),
-        typeof(AbpSwashbuckleModule)
+        typeof(AbpSwashbuckleModule),
+        typeof(AbpLocalizationModule)
         )]
     public class BookStoreWebModule : AbpModule
     {
@@ -69,6 +70,19 @@ namespace Acme.BookStore.Web
                     typeof(BookStoreWebModule).Assembly
                 );
             });
+            //选项
+            PreConfigure<MyPreOptions>(options =>
+            {
+                options.MyValue = true;
+            });
+            //拦截器
+            //context.Services.OnRegistred(ctx =>
+            //{
+            //    if (ctx.ImplementationType.IsDefined(typeof(MyLogAttribute), true))
+            //    {
+            //        ctx.Interceptors.TryAdd<MyLogInterceptor>();
+            //    }
+            //});
         }
 
         public override void ConfigureServices(ServiceConfigurationContext context)
@@ -85,6 +99,28 @@ namespace Acme.BookStore.Web
             ConfigureNavigationServices();
             ConfigureAutoApiControllers();
             ConfigureSwaggerServices(context.Services);
+
+            #region 选项
+            var options = context.Services.ExecutePreConfiguredActions<MyPreOptions>();
+            if (options.MyValue)
+            {
+                //...
+            }
+            Configure<MyOptions>(options =>
+            {
+                options.Value1 = 42;
+                options.Value2 = true;
+            });
+            #endregion
+
+            //注册一个singleton实例
+            context.Services.AddSingleton<TaxCalculator>(new TaxCalculator(taxRatio: 0.18));
+
+            //注册一个从IServiceProvider解析得来的工厂方法
+            context.Services.AddScoped<ITaxCalculator>(sp => sp.GetRequiredService<TaxCalculator>());
+
+
+           
         }
 
         private void ConfigureUrls(IConfiguration configuration)

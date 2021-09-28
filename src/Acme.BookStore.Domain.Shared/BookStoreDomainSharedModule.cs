@@ -39,7 +39,7 @@ namespace Acme.BookStore
             {
                 options.FileSets.AddEmbedded<BookStoreDomainSharedModule>();
             });
-
+           
             Configure<AbpLocalizationOptions>(options =>
             {
                 options.Resources
