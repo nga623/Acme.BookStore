@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Acme.BookStore.Books;
+using AutoMapper;
 
 namespace Acme.BookStore.Web
 {
@@ -6,6 +7,7 @@ namespace Acme.BookStore.Web
     {
         public BookStoreWebAutoMapperProfile()
         {
+            CreateMap<BookDto, CreateUpdateBookDto>();
             //Define your AutoMapper configuration here for the Web project.
         }
     }
