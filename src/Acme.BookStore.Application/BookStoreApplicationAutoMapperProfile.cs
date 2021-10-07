@@ -1,5 +1,6 @@
 ﻿using Acme.BookStore.Books;
 using AutoMapper;
+using Volo.Abp.ObjectMapping;
 
 namespace Acme.BookStore
 {
@@ -7,6 +8,7 @@ namespace Acme.BookStore
     {
         public BookStoreApplicationAutoMapperProfile()
         {
+            
             CreateMap<Book, BookDto>();
             CreateMap<CreateUpdateBookDto, Book>();
             /* You can configure your AutoMapper mapping configuration here.

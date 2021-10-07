@@ -37,6 +37,11 @@ using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp.BackgroundJobs;
+using Volo.Abp.BackgroundJobs.RabbitMQ;
+using Volo.Abp.BackgroundWorkers.Quartz;
+using Volo.Abp.Auditing;
+using Acme.BookStore.Books;
 
 namespace Acme.BookStore.Web
 {
@@ -53,7 +58,11 @@ namespace Acme.BookStore.Web
         typeof(AbpTenantManagementWebModule),
         typeof(AbpAspNetCoreSerilogModule),
         typeof(AbpSwashbuckleModule),
-        typeof(AbpLocalizationModule)
+        
+       // typeof(AbpBackgroundJobsRabbitMqModule),
+        typeof(AbpBackgroundWorkersQuartzModule),
+        typeof(AbpLocalizationModule) 
+        
         )]
     public class BookStoreWebModule : AbpModule
     {
@@ -119,10 +128,22 @@ namespace Acme.BookStore.Web
             //注册一个从IServiceProvider解析得来的工厂方法
             context.Services.AddScoped<ITaxCalculator>(sp => sp.GetRequiredService<TaxCalculator>());
 
+            //ConfigureHangfire(context, configuration);
+            Configure<AbpBackgroundJobWorkerOptions>(options =>
+            {
+                options.DefaultTimeout = 864000; //10 days (as seconds)
+            });
+            Configure<AbpAuditingOptions>(options =>
+            {
+                options.Contributors.Add(new MyAuditLogContributor());
+            });
 
-           
+
+
+            //创建动态客户端代理
+            
         }
-
+        
         private void ConfigureUrls(IConfiguration configuration)
         {
             Configure<AppUrlOptions>(options =>
@@ -270,6 +291,8 @@ namespace Acme.BookStore.Web
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
+
+          //  app.UseHangfireDashboard();
         }
     }
 }

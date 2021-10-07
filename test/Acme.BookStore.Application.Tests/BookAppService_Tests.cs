@@ -21,7 +21,7 @@ namespace Acme.BookStore.Books
         public async Task Should_Get_List_Of_Books()
         {
             //Act
-            var result = await _bookAppService.GetListAsync(
+            var result = await _bookAppService.GetListPagedAsync(
                 new PagedAndSortedResultRequestDto()
             );
 

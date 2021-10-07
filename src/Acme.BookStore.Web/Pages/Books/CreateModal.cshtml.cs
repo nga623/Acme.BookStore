@@ -34,7 +34,8 @@ namespace Acme.BookStore.Web.Pages.Books
 
         public async Task<IActionResult> OnPostAsync()
         {
-            await _bookAppService.CreateAsync(Book);
+             
+             await _bookAppService.CreateAsync(Book);
             return NoContent();
         }
     }

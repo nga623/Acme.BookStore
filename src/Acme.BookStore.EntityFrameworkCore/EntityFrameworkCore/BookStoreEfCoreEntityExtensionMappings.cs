@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Acme.BookStore.Books;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.Threading;
@@ -16,6 +17,14 @@ namespace Acme.BookStore.EntityFrameworkCore
 
             OneTimeRunner.Run(() =>
             {
+                ObjectExtensionManager.Instance
+    .MapEfCoreProperty<Book, string>(
+        "SocialSecurityNumber",
+        (entityBuilder, propertyBuilder) =>
+        {
+            propertyBuilder.HasMaxLength(32);
+        }
+    );
                 /* You can configure extra properties for the
                  * entities defined in the modules used by your application.
                  *

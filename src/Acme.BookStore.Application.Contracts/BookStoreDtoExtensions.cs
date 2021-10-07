@@ -12,6 +12,11 @@ namespace Acme.BookStore
         {
             OneTimeRunner.Run(() =>
             {
+
+                ObjectExtensionManager.Instance
+    .AddOrUpdateProperty<IdentityUserDto, string>(
+        "SocialSecurityNumber"
+    );
                 /* You can add extension properties to DTOs
                  * defined in the depended modules.
                  *
